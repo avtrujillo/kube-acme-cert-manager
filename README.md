@@ -1,3 +1,5 @@
+**THIS CRATE IS A WORK-IN-PROGRESS OPEN SOURCING OF INTERNAL TOOLS.**
+
 This crate has two main components:
 
 - an [ACME](https://datatracker.ietf.org/doc/html/rfc8555) client that creates [cert-manager](https://cert-manager.io/) [certificates](https://cert-mahttps://datatracker.ietf.org/doc/html/rfc8555nager.io/docs/reference/api-docs/#cert-manager.io/v1.Certificate)
