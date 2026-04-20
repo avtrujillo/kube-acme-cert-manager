@@ -92,8 +92,10 @@ async fn challenge_handler(
 ) -> Result<hyper::body::Bytes, StatusCode> {
     let challenge_path = format!("/.well-known/acme-challenge/{}", token);
 
+    // Get a list of all services that route to cert-manager http01 challenge pods
     let services = get_service_list(state.service_api).await?;
 
+    // TODO: handle cases where there is more than one challenge pod
     let service = services.into_iter().next().ok_or(StatusCode::NOT_FOUND)?;
     let service_spec = service.spec.ok_or(StatusCode::NOT_FOUND)?;
     let service_ip = service_spec.cluster_ip.ok_or(StatusCode::NOT_FOUND)?;
@@ -134,12 +136,8 @@ async fn challenge_handler(
     })
 }
 
-// get all kubernetes services labeled with acme.cert-manager.io/http01-solver=true
-async fn get_service_list(service_api: &kube::Api<KubeService>) -> Result<Vec<KubeService>, StatusCode> {
-    
-    let service_list = service_api.list(&ListParams {
-        label_selector: Some(SERVICE_LABEL_SELECTOR.to_string()), ..Default::default()
-    }).await.map_err(|e| {
+// Get all kubernetes services labeled with acme.cert-manager.io/http01-solver=true
+// (These route to cert-manager http01 challenge pods)
 async fn get_service_list(
     service_api: &kube::Api<KubeService>,
 ) -> Result<Vec<KubeService>, StatusCode> {
