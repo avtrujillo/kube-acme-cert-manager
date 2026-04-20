@@ -34,6 +34,8 @@ Check and lint: `cargo check` / `cargo clippy`. There are currently no tests.
 
 Note: `last_seen_challenge` is stored by the controller but is not currently used by the challenge handler — the server resolves the backend purely by the Service label selector.
 
+Note: the server assumes only one solver Service is active at a time (takes the first result from the label query, with no guaranteed ordering). This breaks if multiple HTTP-01 challenges are active simultaneously in the namespace — e.g. a Certificate with multiple SANs, or two Certificates renewing concurrently. Planned to be addressed.
+
 ## Architecture
 
 Two concurrent Tokio tasks run in `main.rs`:
