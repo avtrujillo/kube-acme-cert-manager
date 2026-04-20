@@ -205,6 +205,7 @@ pub struct ChallengeSolverDns01AzureDnsClientSecretSecretRef {
 
 /// Use the Microsoft Azure DNS API to manage DNS01 challenge records.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
+#[allow(clippy::enum_variant_names)]
 pub enum ChallengeSolverDns01AzureDnsEnvironment {
     AzurePublicCloud,
     AzureChinaCloud,
@@ -443,9 +444,9 @@ pub struct ChallengeSolverHttp01GatewayHttpRouteParentRefs {
     pub port: Option<i32>,
     /// SectionName is the name of a section within the target resource. In the following resources, SectionName is interpreted as the following: 
     ///  * Gateway: Listener Name. When both Port (experimental) and SectionName are specified, the name and port of the selected listener must match both specified values. 
-    ///  Implementations MAY choose to support attaching Routes to other resources. If that is the case, they MUST clearly document how SectionName is interpreted. 
-    ///  When unspecified (empty string), this will reference the entire resource. For the purpose of status, an attachment is considered successful if at least one section in the parent resource accepts it. For example, Gateway listeners can restrict which Routes can attach to them by Route kind, namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from the referencing Route, the Route MUST be considered successfully attached. If no Gateway listeners accept attachment from this Route, the Route MUST be considered detached from the Gateway. 
-    ///  Support: Core
+    ///    Implementations MAY choose to support attaching Routes to other resources. If that is the case, they MUST clearly document how SectionName is interpreted. 
+    ///    When unspecified (empty string), this will reference the entire resource. For the purpose of status, an attachment is considered successful if at least one section in the parent resource accepts it. For example, Gateway listeners can restrict which Routes can attach to them by Route kind, namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from the referencing Route, the Route MUST be considered successfully attached. If no Gateway listeners accept attachment from this Route, the Route MUST be considered detached from the Gateway. 
+    ///    Support: Core
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "sectionName")]
     pub section_name: Option<String>,
 }

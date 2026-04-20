@@ -55,7 +55,7 @@ pub async fn run_challenge_controller_and_server(
     );
     let challenge_server_state = ChallengeServerState {
         service_api,
-        last_seen_challenge: last_seen_challenge,
+        last_seen_challenge,
         reqwest_client: reqwest::Client::new()
     };
 
@@ -129,7 +129,7 @@ pub struct LastSeen<T: Clone + Sync>(Mutex<Cell<Observed<T>>>);
 // TODO: optimize
 impl<T: Clone + Sync> LastSeen<T> {
     pub fn new(inner: T) -> Self {
-        Self(Mutex::new(Cell::new(Observed { inner: inner, timestamp: tokio::time::Instant::now() })))
+        Self(Mutex::new(Cell::new(Observed { inner, timestamp: tokio::time::Instant::now() })))
     }
 
     // TODO: proper caching

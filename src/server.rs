@@ -19,7 +19,7 @@ use super::{LastSeen, ChallengeServerWithControllerError};
 
 use crate::crds::challenge::Challenge;
 
-static SERVICE_LABEL_SELECTOR: &'static str = "acme.cert-manager.io/http01-solver=true";
+static SERVICE_LABEL_SELECTOR: &str = "acme.cert-manager.io/http01-solver=true";
 
 // responds to healthchecks
 #[axum::debug_handler]
@@ -61,15 +61,11 @@ pub async fn run_challenge_server(
     .route("/healthz/", axum::routing::get(healthz))
     .fallback(async |http_uri: Uri| {
         match Uri::builder()
-        .authority((http_uri.authority()).map(|authority| {
-            authority.clone()
-        }).unwrap_or(
+        .authority((http_uri.authority()).cloned().unwrap_or(
             domain
         ))
         .path_and_query(
-            http_uri.path_and_query().map(|pq| {
-                pq.clone()
-            }).unwrap_or(
+            http_uri.path_and_query().cloned().unwrap_or(
                 http::uri::PathAndQuery::from_static("/")
             )
         )
@@ -145,13 +141,7 @@ async fn challenge_handler(
 
 // get all kubernetes services labeled with acme.cert-manager.io/http01-solver=true
 async fn get_service_list(service_api: &kube::Api<KubeService>) -> Result<Vec<KubeService>, StatusCode> {
-    // let (service_request, _service_response_fn) = KubeService::list("lectures", ListOptional {
-    //     label_selector: Some(SERVICE_LABEL_SELECTOR), ..Default::default()
-    // }).map_err(|e| {
-    //     eprintln!("{:?}", e);
-    //     StatusCode::INTERNAL_SERVER_ERROR
-    // })?;
-
+    
     let service_list = service_api.list(&ListParams {
         label_selector: Some(SERVICE_LABEL_SELECTOR.to_string()), ..Default::default()
     }).await.map_err(|e| {
@@ -161,40 +151,6 @@ async fn get_service_list(service_api: &kube::Api<KubeService>) -> Result<Vec<Ku
     })?;
 
     Ok(service_list.into_iter().collect())
-
-    // let (service_req_parts, service_req_bytes) = service_request.into_parts();
-    // let service_req_body = hyper::body::Body::from(service_req_bytes.clone());
-    // let service_request = http::Request::<hyper::body::Body>::from_parts(service_req_parts, service_req_body);
-
-    // let service_list_response= kube_client.send(service_request).await.map_err(|e| {
-    //     eprintln!("{:?}", e);
-    //     StatusCode::INTERNAL_SERVER_ERROR
-    // })?;
-
-    // let service_list_status_code = service_list_response.status();
-
-    // let service_list_resp_body = service_response_fn(service_list_status_code.clone());
-    // let resp_bytes = hyper::body::to_bytes( service_list_response.into_body()).await.map_err(|e| {
-    //     eprintln!("{:?}", e);
-    //     StatusCode::INTERNAL_SERVER_ERROR
-    // })?;
-
-    // let (list_response, _bytes_read) = <ListResponse<KubeService> as k8s_openapi::Response>::try_from_parts(
-    //     service_list_status_code, &resp_bytes
-    // ).map_err(|e| {
-    //     eprintln!("{:?}", e);
-    //     StatusCode::INTERNAL_SERVER_ERROR
-    // })?;
-
-    // match list_response {
-    //     ListResponse::Ok(service_list) => {
-    //         Ok(service_list.items)
-    //     },
-    //     ListResponse::Other(e) => {
-    //         eprintln!("{:?}", e);
-    //         Err(StatusCode::INTERNAL_SERVER_ERROR)
-    //     }
-    // }
 }
 
 #[derive(Clone)]
@@ -226,7 +182,7 @@ impl axum::extract::FromRequest<ChallengeServerState> for http::Request<hyper::b
         let collected = req_body.collect().await?;
         Ok(http::Request::from_parts(
             req_parts,
-            hyper::body::Bytes::from(collected.to_bytes())
+            collected.to_bytes()
         ))
     }
 }

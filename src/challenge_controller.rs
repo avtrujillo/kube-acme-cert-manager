@@ -24,22 +24,28 @@ pub async fn challenge_controller_start(
     let challenge_api = kube::Api::<Challenge>::namespaced(kube_client, namespace.as_str());
     let context = Arc::new(ChallengerControllerContext{
         challenge_api: challenge_api.clone(),
-        last_seen_challenge: last_seen_challenge
+        last_seen_challenge
     });
     let controller = Controller::<Challenge>::new(
         challenge_api,
         // kube::api::ListParams::default()
         watcher_config
     );
-    Ok(controller.run(reconcile, error_policy, context)
-        .for_each(|res| async move {
-            match res {
-                Err(e) => {
-                    eprintln!("Challenge controller reconcile error: {:?}", e)
-                },
-                Ok(o) => println!("Challenge reconciled: {:?}", o)
-            }
-        }).await)
+    #[allow(clippy::unit_arg)]
+    Ok(
+        controller.run(reconcile, error_policy, context)
+            .for_each(|res| async move {
+                match res {
+                    Err(e) => {
+                        eprintln!("Challenge controller reconcile error: {:?}", e)
+                    },
+                    Ok(o) => println!(
+                        "Challenge reconciled: {:?}", o
+                    )
+                }
+            })
+        .await
+    )
 }
 
 async fn reconcile(challenge: Arc<Challenge>, context: Arc<ChallengerControllerContext>) -> Result<Action, kube::runtime::finalizer::Error<kube::Error>> {
