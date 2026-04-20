@@ -9,12 +9,12 @@ kube = {version ="^3.0.1", default-features = false, features = [
     "kube-runtime", "runtime", "derive", "kube-derive", "client", "config",
     "rustls-tls", "aws-lc-rs"
 ]}
-rustls = { version = "^0.23.37", default-features = false, features = [
+rustls = { version = "^0.23.38", default-features = false, features = [
     "std", "logging", "prefer-post-quantum", "aws-lc-rs"
 ]}
 
 tokio = { version = "^1.50.0", features = ["full"] }
-k8s-openapi = {version = "^0.27.0", default-features = false, features = ["schemars"]}
+k8s-openapi = {version = "^0.27.1", default-features = false, features = ["schemars"]}
 schemars = "^1.2.1"
 serde = { version = "^1.0.228", features = ["derive"] }
 serde_json = "^1.0.149"
@@ -29,9 +29,15 @@ reqwest = {version = "0.13.2", default-features = false, features = [
 http-body-util = "0.1.3"
 
 [features]
-fips=[
-    "rustls/fips",
-    # "aws-lc-rs/fips"
-]
+default = ["v1_35"]
+
+v1_31=["k8s-openapi/v1_31"]
+v1_32=["k8s-openapi/v1_32"]
+v1_33=["k8s-openapi/v1_33"]
 v1_34=["k8s-openapi/v1_34"]
 v1_35=["k8s-openapi/v1_35"]
+
+# TODO: fips may introduce extra build requirements, incluidng cmake and go installations
+# fips=[
+#     "rustls/fips",
+# ]
