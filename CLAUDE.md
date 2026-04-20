@@ -67,6 +67,8 @@ The service account running this Pod needs:
 | `challenges` | `acme.cert-manager.io` | `get`, `list`, `watch`, `patch`, `update` |
 | `services` | `""` (core) | `get`, `list` |
 
+Note: these permissions are inferred from the code (controller watches Challenges and manages finalizers; server lists Services) and have not been verified against the actual deployment configuration.
+
 ## Environment Variables
 
 | Variable    | Default | Description                          |
