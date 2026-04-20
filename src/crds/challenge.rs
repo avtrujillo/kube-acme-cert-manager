@@ -4,11 +4,16 @@
 
 use kube::CustomResource;
 use schemars::JsonSchema;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 #[derive(CustomResource, Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-#[kube(group = "acme.cert-manager.io", version = "v1", kind = "Challenge", plural = "challenges")]
+#[kube(
+    group = "acme.cert-manager.io",
+    version = "v1",
+    kind = "Challenge",
+    plural = "challenges"
+)]
 #[kube(namespaced)]
 #[kube(status = "ChallengeStatus")]
 pub struct ChallengeSpec {
@@ -83,7 +88,11 @@ pub struct ChallengeSolverDns01 {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub cloudflare: Option<ChallengeSolverDns01Cloudflare>,
     /// CNAMEStrategy configures how the DNS01 provider should handle CNAME records when found in DNS zones.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "cnameStrategy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "cnameStrategy"
+    )]
     pub cname_strategy: Option<ChallengeSolverDns01CnameStrategy>,
     /// Use the DigitalOcean DNS API to manage DNS01 challenge records.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -171,16 +180,28 @@ pub struct ChallengeSolverDns01AzureDns {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "clientID")]
     pub client_id: Option<String>,
     /// if both this and ClientID are left unset MSI will be used
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "clientSecretSecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "clientSecretSecretRef"
+    )]
     pub client_secret_secret_ref: Option<ChallengeSolverDns01AzureDnsClientSecretSecretRef>,
     /// name of the Azure environment (default AzurePublicCloud)
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub environment: Option<ChallengeSolverDns01AzureDnsEnvironment>,
     /// name of the DNS zone that should be used
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "hostedZoneName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "hostedZoneName"
+    )]
     pub hosted_zone_name: Option<String>,
     /// managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedIdentity")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedIdentity"
+    )]
     pub managed_identity: Option<ChallengeSolverDns01AzureDnsManagedIdentity>,
     /// resource group the DNS zone is located in
     #[serde(rename = "resourceGroupName")]
@@ -221,7 +242,11 @@ pub struct ChallengeSolverDns01AzureDnsManagedIdentity {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "clientID")]
     pub client_id: Option<String>,
     /// resource ID of the managed identity, can not be used at the same time as clientID
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "resourceID")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "resourceID"
+    )]
     pub resource_id: Option<String>,
 }
 
@@ -229,11 +254,19 @@ pub struct ChallengeSolverDns01AzureDnsManagedIdentity {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct ChallengeSolverDns01CloudDns {
     /// HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "hostedZoneName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "hostedZoneName"
+    )]
     pub hosted_zone_name: Option<String>,
     pub project: String,
     /// A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "serviceAccountSecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "serviceAccountSecretRef"
+    )]
     pub service_account_secret_ref: Option<ChallengeSolverDns01CloudDnsServiceAccountSecretRef>,
 }
 
@@ -251,10 +284,18 @@ pub struct ChallengeSolverDns01CloudDnsServiceAccountSecretRef {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct ChallengeSolverDns01Cloudflare {
     /// API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiKeySecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiKeySecretRef"
+    )]
     pub api_key_secret_ref: Option<ChallengeSolverDns01CloudflareApiKeySecretRef>,
     /// API token used to authenticate with Cloudflare.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiTokenSecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiTokenSecretRef"
+    )]
     pub api_token_secret_ref: Option<ChallengeSolverDns01CloudflareApiTokenSecretRef>,
     /// Email of the account, only required when using API key based authentication.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -312,13 +353,25 @@ pub struct ChallengeSolverDns01Rfc2136 {
     /// The IP address or hostname of an authoritative DNS server supporting RFC2136 in the form host:port. If the host is an IPv6 address it must be enclosed in square brackets (e.g [2001:db8::1]) ; port is optional. This field is required.
     pub nameserver: String,
     /// The TSIG Algorithm configured in the DNS supporting RFC2136. Used only when ``tsigSecretSecretRef`` and ``tsigKeyName`` are defined. Supported values are (case-insensitive): ``HMACMD5`` (default), ``HMACSHA1``, ``HMACSHA256`` or ``HMACSHA512``.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tsigAlgorithm")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tsigAlgorithm"
+    )]
     pub tsig_algorithm: Option<String>,
     /// The TSIG Key name configured in the DNS. If ``tsigSecretSecretRef`` is defined, this field is required.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tsigKeyName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tsigKeyName"
+    )]
     pub tsig_key_name: Option<String>,
     /// The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tsigSecretSecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tsigSecretSecretRef"
+    )]
     pub tsig_secret_secret_ref: Option<ChallengeSolverDns01Rfc2136TsigSecretSecretRef>,
 }
 
@@ -336,13 +389,25 @@ pub struct ChallengeSolverDns01Rfc2136TsigSecretSecretRef {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct ChallengeSolverDns01Route53 {
     /// The AccessKeyID is used for authentication. Cannot be set when SecretAccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "accessKeyID")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "accessKeyID"
+    )]
     pub access_key_id: Option<String>,
     /// The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "accessKeyIDSecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "accessKeyIDSecretRef"
+    )]
     pub access_key_id_secret_ref: Option<ChallengeSolverDns01Route53AccessKeyIdSecretRef>,
     /// If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "hostedZoneID")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "hostedZoneID"
+    )]
     pub hosted_zone_id: Option<String>,
     /// Always set the region when using AccessKeyID and SecretAccessKey
     pub region: String,
@@ -350,7 +415,11 @@ pub struct ChallengeSolverDns01Route53 {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
     /// The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "secretAccessKeySecretRef")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "secretAccessKeySecretRef"
+    )]
     pub secret_access_key_secret_ref: Option<ChallengeSolverDns01Route53SecretAccessKeySecretRef>,
 }
 
@@ -392,7 +461,11 @@ pub struct ChallengeSolverDns01Webhook {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct ChallengeSolverHttp01 {
     /// The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "gatewayHTTPRoute")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "gatewayHTTPRoute"
+    )]
     pub gateway_http_route: Option<ChallengeSolverHttp01GatewayHttpRoute>,
     /// The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -406,48 +479,60 @@ pub struct ChallengeSolverHttp01GatewayHttpRoute {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<BTreeMap<String, String>>,
     /// When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/api-types/httproute/#attaching-to-gateways
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "parentRefs")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "parentRefs"
+    )]
     pub parent_refs: Option<Vec<ChallengeSolverHttp01GatewayHttpRouteParentRefs>>,
     /// Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "serviceType")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "serviceType"
+    )]
     pub service_type: Option<String>,
 }
 
-/// ParentReference identifies an API object (usually a Gateway) that can be considered a parent of this resource (usually a route). The only kind of parent resource with "Core" support is Gateway. This API may be extended in the future to support additional kinds of parent resources, such as HTTPRoute. 
+/// ParentReference identifies an API object (usually a Gateway) that can be considered a parent of this resource (usually a route). The only kind of parent resource with "Core" support is Gateway. This API may be extended in the future to support additional kinds of parent resources, such as HTTPRoute.
 ///  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct ChallengeSolverHttp01GatewayHttpRouteParentRefs {
-    /// Group is the group of the referent. When unspecified, "gateway.networking.k8s.io" is inferred. To set the core API group (such as for a "Service" kind referent), Group must be explicitly set to "" (empty string). 
+    /// Group is the group of the referent. When unspecified, "gateway.networking.k8s.io" is inferred. To set the core API group (such as for a "Service" kind referent), Group must be explicitly set to "" (empty string).
     ///  Support: Core
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    /// Kind is kind of the referent. 
-    ///  Support: Core (Gateway) 
+    /// Kind is kind of the referent.
+    ///  Support: Core (Gateway)
     ///  Support: Implementation-specific (Other Resources)
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    /// Name is the name of the referent. 
+    /// Name is the name of the referent.
     ///  Support: Core
     pub name: String,
-    /// Namespace is the namespace of the referent. When unspecified, this refers to the local namespace of the Route. 
-    ///  Note that there are specific rules for ParentRefs which cross namespace boundaries. Cross-namespace references are only valid if they are explicitly allowed by something in the namespace they are referring to. For example: Gateway has the AllowedRoutes field, and ReferenceGrant provides a generic way to enable any other kind of cross-namespace reference. 
+    /// Namespace is the namespace of the referent. When unspecified, this refers to the local namespace of the Route.
+    ///  Note that there are specific rules for ParentRefs which cross namespace boundaries. Cross-namespace references are only valid if they are explicitly allowed by something in the namespace they are referring to. For example: Gateway has the AllowedRoutes field, and ReferenceGrant provides a generic way to enable any other kind of cross-namespace reference.
     ///  Support: Core
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
-    /// Port is the network port this Route targets. It can be interpreted differently based on the type of parent resource. 
-    ///  When the parent resource is a Gateway, this targets all listeners listening on the specified port that also support this kind of Route(and select this Route). It's not recommended to set `Port` unless the networking behaviors specified in a Route must apply to a specific port as opposed to a listener(s) whose port(s) may be changed. When both Port and SectionName are specified, the name and port of the selected listener must match both specified values. 
-    ///  Implementations MAY choose to support other parent resources. Implementations supporting other types of parent resources MUST clearly document how/if Port is interpreted. 
-    ///  For the purpose of status, an attachment is considered successful as long as the parent resource accepts it partially. For example, Gateway listeners can restrict which Routes can attach to them by Route kind, namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from the referencing Route, the Route MUST be considered successfully attached. If no Gateway listeners accept attachment from this Route, the Route MUST be considered detached from the Gateway. 
-    ///  Support: Extended 
+    /// Port is the network port this Route targets. It can be interpreted differently based on the type of parent resource.
+    ///  When the parent resource is a Gateway, this targets all listeners listening on the specified port that also support this kind of Route(and select this Route). It's not recommended to set `Port` unless the networking behaviors specified in a Route must apply to a specific port as opposed to a listener(s) whose port(s) may be changed. When both Port and SectionName are specified, the name and port of the selected listener must match both specified values.
+    ///  Implementations MAY choose to support other parent resources. Implementations supporting other types of parent resources MUST clearly document how/if Port is interpreted.
+    ///  For the purpose of status, an attachment is considered successful as long as the parent resource accepts it partially. For example, Gateway listeners can restrict which Routes can attach to them by Route kind, namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from the referencing Route, the Route MUST be considered successfully attached. If no Gateway listeners accept attachment from this Route, the Route MUST be considered detached from the Gateway.
+    ///  Support: Extended
     ///  <gateway:experimental>
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub port: Option<i32>,
-    /// SectionName is the name of a section within the target resource. In the following resources, SectionName is interpreted as the following: 
-    ///  * Gateway: Listener Name. When both Port (experimental) and SectionName are specified, the name and port of the selected listener must match both specified values. 
-    ///    Implementations MAY choose to support attaching Routes to other resources. If that is the case, they MUST clearly document how SectionName is interpreted. 
-    ///    When unspecified (empty string), this will reference the entire resource. For the purpose of status, an attachment is considered successful if at least one section in the parent resource accepts it. For example, Gateway listeners can restrict which Routes can attach to them by Route kind, namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from the referencing Route, the Route MUST be considered successfully attached. If no Gateway listeners accept attachment from this Route, the Route MUST be considered detached from the Gateway. 
+    /// SectionName is the name of a section within the target resource. In the following resources, SectionName is interpreted as the following:
+    ///  * Gateway: Listener Name. When both Port (experimental) and SectionName are specified, the name and port of the selected listener must match both specified values.
+    ///    Implementations MAY choose to support attaching Routes to other resources. If that is the case, they MUST clearly document how SectionName is interpreted.
+    ///    When unspecified (empty string), this will reference the entire resource. For the purpose of status, an attachment is considered successful if at least one section in the parent resource accepts it. For example, Gateway listeners can restrict which Routes can attach to them by Route kind, namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from the referencing Route, the Route MUST be considered successfully attached. If no Gateway listeners accept attachment from this Route, the Route MUST be considered detached from the Gateway.
     ///    Support: Core
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sectionName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sectionName"
+    )]
     pub section_name: Option<String>,
 }
 
@@ -458,16 +543,28 @@ pub struct ChallengeSolverHttp01Ingress {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub class: Option<String>,
     /// Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ingressTemplate")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ingressTemplate"
+    )]
     pub ingress_template: Option<ChallengeSolverHttp01IngressIngressTemplate>,
     /// The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "podTemplate")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "podTemplate"
+    )]
     pub pod_template: Option<ChallengeSolverHttp01IngressPodTemplate>,
     /// Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "serviceType")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "serviceType"
+    )]
     pub service_type: Option<String>,
 }
 
@@ -519,13 +616,25 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpec {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub affinity: Option<ChallengeSolverHttp01IngressPodTemplateSpecAffinity>,
     /// NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nodeSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nodeSelector"
+    )]
     pub node_selector: Option<BTreeMap<String, String>>,
     /// If specified, the pod's priorityClassName.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "priorityClassName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "priorityClassName"
+    )]
     pub priority_class_name: Option<String>,
     /// If specified, the pod's service account
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "serviceAccountName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "serviceAccountName"
+    )]
     pub service_account_name: Option<String>,
     /// If specified, the pod's tolerations.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -536,14 +645,27 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpec {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinity {
     /// Describes node affinity scheduling rules for the pod.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nodeAffinity")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nodeAffinity"
+    )]
     pub node_affinity: Option<ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinity>,
     /// Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "podAffinity")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "podAffinity"
+    )]
     pub pod_affinity: Option<ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinity>,
     /// Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "podAntiAffinity")]
-    pub pod_anti_affinity: Option<ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinity>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "podAntiAffinity"
+    )]
+    pub pod_anti_affinity:
+        Option<ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinity>,
 }
 
 /// Describes node affinity scheduling rules for the pod.
@@ -579,7 +701,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPrefer
 
 /// A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions
+{
     /// The label key that the selector applies to.
     pub key: String,
     /// Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
@@ -591,7 +714,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPrefer
 
 /// A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields
+{
     /// The label key that the selector applies to.
     pub key: String,
     /// Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
@@ -622,7 +746,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequir
 
 /// A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions
+{
     /// The label key that the selector applies to.
     pub key: String,
     /// Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
@@ -634,7 +759,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequir
 
 /// A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields
+{
     /// The label key that the selector applies to.
     pub key: String,
     /// Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
@@ -695,7 +821,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferr
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -718,7 +845,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferr
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -758,7 +886,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequire
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -781,7 +910,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequire
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -842,7 +972,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPre
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -865,7 +996,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPre
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -905,7 +1037,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityReq
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -928,7 +1061,8 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityReq
 
 /// A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
+pub struct ChallengeSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions
+{
     /// key is the label key that the selector applies to.
     pub key: String,
     /// operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
@@ -951,7 +1085,11 @@ pub struct ChallengeSolverHttp01IngressPodTemplateSpecTolerations {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub operator: Option<String>,
     /// TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tolerationSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tolerationSeconds"
+    )]
     pub toleration_seconds: Option<i64>,
     /// Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -968,7 +1106,11 @@ pub struct ChallengeSolverSelector {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "dnsZones")]
     pub dns_zones: Option<Vec<String>>,
     /// A label selector that is used to refine the set of certificate's that this challenge solver will apply to.
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -1013,4 +1155,3 @@ pub enum ChallengeStatusState {
     #[serde(rename = "errored")]
     Errored,
 }
-
